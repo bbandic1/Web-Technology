@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+  <title>Quantum Computing</title>
+  <style>
+    .form-label {
+      display: inline-block;
+      width: 60px;
+    }
+    .form-input {
+      margin-left: 40px;
+      margin-right: 30px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <form>
+    <label for="ime" class="form-label">Ime:</label>
+    <input type="text" id="ime" name="ime" class="form-input">
+
+    <label for="grad" class="form-label">Grad:</label>
+    <input type="text" id="grad" name="grad" class="form-input"><br>
+
+    <label for="prezime" class="form-label">Prezime:</label>
+    <input type="text" id="prezime" name="prezime" class="form-input">
+
+    <label for="broj_indeksa" class="form-label">Broj indeksa:</label>
+    <input type="text" id="broj_indeksa" name="broj_indeksa" class="form-input"><br><br>
+
+    <label>Spol:</label>
+    <input type="radio" id="muski" name="spol" value="muski">
+    <label for="muski">Muški</label>
+    <input type="radio" id="zenski" name="spol" value="zenski">
+    <label for="zenski" style="margin-right: 20px;">Ženski</label>
+    <input type="checkbox" id="samofinansirajuci" name="samofinansirajuci">
+    <label for="samofinansirajuci">Samofinansirajući</label><br><br>
+
+    <label>Odsjek:</label>
+    <input type="radio" id="AE" name="odsjek" value="AE"><label for="AE">AE</label>
+    <input type="radio" id="EE" name="odsjek" value="EE"><label for="EE">EE</label>
+    <input type="radio" id="RI" name="odsjek" value="RI"><label for="RI">RI</label>
+    <input type="radio" id="TK" name="odsjek" value="TK"><label for="TK">TK</label><br><br>
+
+    <input type="submit" value="Prihvati" style="margin-right: 500px;">
+    <input type="button" value="Poništi"><br>
+    <p>Dugme Potvrdi šalje formu negdje (bilo gdje), a dugme Poništi je resetuje.</p>
+  </form>
+</body>
+</html>
