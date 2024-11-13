@@ -1,0 +1,12 @@
+.hidden {
+    display: none;
+  }
+  .tree-node {
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    margin: 5px 0;
+  }
+  .child-nodes {
+    margin-left: 20px;
+  }
+  
