@@ -1,8 +1,6 @@
 body {
   background-color: #fdf1d3;
   font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
 }
 
 body h3 {
@@ -12,7 +10,6 @@ body h3 {
 iframe {
   border: none;
   width: 100%;
-  height: 50px;
 }
 
 #osnovno {
@@ -85,15 +82,49 @@ iframe {
 
 @media (max-width: 599px) {
   #upiti {
-    display: block;
+    display: flex;
+    justify-content: center;
+    position: relative; 
+    border: 1px solid #000; 
+    padding: 20px;
+    margin: 20px;
   }
 
   .upit {
-    width: 100%;
+    width: 80%; 
+    margin: 0 auto;
+    text-align: center;
   }
 
   .carousel-navigation {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    top: 95%; 
+    transform: translateY(-50%);
+    pointer-events: none; 
+  }
+
+  .arrow {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    pointer-events: all; 
+    z-index: 10;
+    user-select: none;
+  }
+
+  .arrow.left-arrow {
+    position: absolute;
+    left: 5%;
+  }
+
+  .arrow.right-arrow {
+    position: absolute;
+    right: 5%;
   }
 
   .upit:nth-child(n+2) {
