@@ -1,10 +1,7 @@
 function spojiNekretnine(divReferenca, instancaModula, tip_nekretnine) {
-    // pozivanje metode za filtriranje
+
     const filtriraneNekretnine = instancaModula.filtrirajNekretnine({ tip_nekretnine: tip_nekretnine });
     
-    // iscrtavanje elemenata u divReferenca element
-
-    // Ciscenje svih elemenata liste
     divReferenca.innerHTML = '';
 
     if (filtriraneNekretnine.length === 0) {
@@ -42,13 +39,11 @@ function spojiNekretnine(divReferenca, instancaModula, tip_nekretnine) {
             nekretninaElement.appendChild(cijenaElement);
 
             const detaljiDugme = document.createElement('a');
-            detaljiDugme.href = '../HTML/detalji.html'; // hardkodiran html
+            detaljiDugme.href = '../HTML/detalji.html'; 
             detaljiDugme.classList.add('detalji-dugme');
             detaljiDugme.textContent = 'Detalji';
             nekretninaElement.appendChild(detaljiDugme);
 
-
-            // Dodavanje kreiranog elementa u divReferenci
             divReferenca.appendChild(nekretninaElement);
         });
     }
@@ -182,11 +177,9 @@ const divStan = document.getElementById("stan");
 const divKuca = document.getElementById("kuca");
 const divPp = document.getElementById("pp");
 
-//instanciranje modula
 let nekretnine = SpisakNekretnina();
 nekretnine.init(listaNekretnina, listaKorisnika);
 
-//pozivanje funkcije
 spojiNekretnine(divStan, nekretnine, "Stan");
 spojiNekretnine(divKuca, nekretnine, "Kuća");
 spojiNekretnine(divPp, nekretnine, "Poslovni prostor");
