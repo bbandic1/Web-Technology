@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="bs-BA">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistika Nekretnina</title>
+    <link rel="stylesheet" href="../CSS/statistika.css">
+</head>
+<body>
+    
+    <iframe src="meni.html"></iframe>
+
+    <div class="container">
+        <section class="statistic">
+            <h2>Unos Perioda i Raspona Cijena</h2>
+            <form id="inputForm">
+                <label for="periodOd">Period od:</label>
+                <input type="number" id="periodOd" name="periodOd" required>
+                <label for="periodDo">Period do:</label>
+                <input type="number" id="periodDo" name="periodDo" required>
+                <br>
+                <label for="cijenaOd">Cijena od:</label>
+                <input type="number" id="cijenaOd" name="cijenaOd" required>
+                <label for="cijenaDo">Cijena do:</label>
+                <input type="number" id="cijenaDo" name="cijenaDo" required>
+                <br><br>
+                <button type="button">Iscrtaj Histogram</button>
+            </form>
+        </section>
+
+        <section class="histogram">
+            <h2>Histogram Cijena</h2>
+            <canvas id="mojChart"></canvas>
+        </section>
+    </div>
+
+    <script src="../Scripts/SpisakNekretnina.js"></script>
+    <script src="../Scripts/statistika.js"></script>
+</body>
+</html>

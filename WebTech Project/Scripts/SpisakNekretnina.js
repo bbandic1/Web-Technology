@@ -39,7 +39,6 @@ let SpisakNekretnina = function () {
         return listaNekretnina.find(nekretnina => nekretnina.id === id) || null;
     }
 
-
     return {
         init: init,
         filtrirajNekretnine: filtrirajNekretnine,
