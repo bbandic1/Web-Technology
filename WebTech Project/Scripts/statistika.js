@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM je učitan!"); 
-    console.log("StatistikaNekretnina objekat:", window.StatistikaNekretnina);
+
+    let statistika = StatistikaNekretnina();
+
+    console.log("StatistikaNekretnina objekat:", statistika);
 
     const button = document.querySelector("button");
     const canvas = document.getElementById("mojChart");
@@ -26,21 +29,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         console.log("Kreirani periodi i rasponi cijena:", periodi, rasponiCijena);
 
-
-        const podaciHistograma = window.StatistikaNekretnina.histogramCijena(periodi, rasponiCijena);
+        const podaciHistograma = statistika.histogramCijena(periodi, rasponiCijena);
         console.log("Podaci za histogram:", podaciHistograma);
 
         const labels = rasponiCijena.map((raspon, index) => `Raspon ${index + 1}`);
         const data = podaciHistograma.map(d => d.brojNekretnina);
-
-        console.log("Labels:", labels);
-        console.log("Data:", data);
 
         iscrtajHistogram(canvas, labels, data);
     });
 
     function iscrtajHistogram(canvas, labels, data) {
         console.log("Počinje iscrtavanje histograma..."); 
+        console.log("Canvas:", canvas);
+        console.log("Labels za Chart.js:", labels);
+        console.log("Data za Chart.js:", data);
         new Chart(canvas, {
             type: "bar",
             data: {
