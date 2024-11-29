@@ -52,17 +52,30 @@ let StatistikaNekretnina = function () {
     };
 
     let histogramCijena = function (periodi, rasponiCijena) {
-        return periodi.flatMap((period, periodIndex) => {
-            return rasponiCijena.map((raspon, rasponIndex) => {
-                
-                const filtriraneNekretnine = listaNekretnina.filter(nekretnina => 
-                    nekretnina.godina_objave >= period.od &&
-                    nekretnina.godina_objave <= period.do &&
-                    nekretnina.cijena >= raspon.od &&
-                    nekretnina.cijena <= raspon.do
-                );
+        console.log("Ulazni periodi:", periodi);
+        console.log("Ulazni rasponi cijena:", rasponiCijena);
+        console.log(this.listaNekretnina);
     
-                console.log(`Period (${period.od}-${period.do}), Raspon (${raspon.od}-${raspon.do}):`, filtriraneNekretnine);
+        return periodi.flatMap((period, periodIndex) => {
+            console.log(`Obrađujem period (${period.od}-${period.do}), indeks: ${periodIndex}`);
+    
+            return rasponiCijena.map((raspon, rasponIndex) => {
+                console.log(`Obrađujem raspon cijena (${raspon.od}-${raspon.do}), indeks: ${rasponIndex}`);
+    
+                const filtriraneNekretnine = this.listaNekretnina.filter(nekretnina => {
+                    kompletni_datum=nekretnina.datum_objave;
+                    let godina = kompletni_datum.split('.')[2];
+                    
+                    const uslov = godina >= period.od &&
+                                  godina <= period.do &&
+                                  nekretnina.cijena >= raspon.od &&
+                                  nekretnina.cijena <= raspon.do;
+    
+                    console.log(`    Provjeravam nekretninu:`, nekretnina, "Uslov:", uslov);
+                    return uslov;
+                });
+    
+                console.log(`  Period (${period.od}-${period.do}), Raspon (${raspon.od}-${raspon.do}): Filtrirane nekretnine:`, filtriraneNekretnine);
     
                 return {
                     indeksPerioda: periodIndex,

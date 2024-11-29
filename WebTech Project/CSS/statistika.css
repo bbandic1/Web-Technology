@@ -93,6 +93,9 @@ input::placeholder, textarea::placeholder {
     margin: 20px;
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 900px;  
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @media screen and (max-width: 768px) {
