@@ -1,8 +1,12 @@
-document.addEventListener("DOMContentLoaded", function () {
+function postaviCarousel() {
     const upiti = document.querySelectorAll("#upiti .upit");
     const leftArrow = document.querySelector(".carousel-navigation .left-arrow");
     const rightArrow = document.querySelector(".carousel-navigation .right-arrow");
     let trenutniIndex = 0;
+
+    if (!upiti || upiti.length === 0 || !leftArrow || !rightArrow) {
+        return;
+    }
 
     function prikažiSveUpite() {
         upiti.forEach(upit => {
@@ -40,7 +44,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 rightArrow.style.display = "none";
             }
         } else {
-            
             prikažiSveUpite();
             leftArrow.style.display = "none";
             rightArrow.style.display = "none";
@@ -55,4 +58,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     window.addEventListener("resize", ažurirajView);
-});
+}
+
+document.addEventListener("DOMContentLoaded", postaviCarousel);

@@ -1,41 +1,99 @@
 <!DOCTYPE html>
 <html lang="bs-BA">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statistika Nekretnina</title>
-    <link rel="stylesheet" href="../CSS/statistika.css">
+    <title>Statistika</title>
+    <link rel="stylesheet" type="text/css" href="../CSS/statistika.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../Scripts/staticLista.js"></script>
     <script src="../Scripts/SpisakNekretnina.js"></script>
     <script src="../Scripts/StatistikaNekretnina.js"></script>
     <script src="../Scripts/statistika.js"></script>
 </head>
+
 <body>
-    
     <iframe src="meni.html"></iframe>
 
-    <div class="container">
-        <section class="statistic">
-            <h2>Unos Perioda i Raspona Cijena</h2>
-            <form id="inputForm">
-                <label for="periodOd">Period od:</label>
-                <input type="number" id="periodOd" name="periodOd" required>
-                <label for="periodDo">Period do:</label>
-                <input type="number" id="periodDo" name="periodDo" required>
-                <br>
-                <label for="cijenaOd">Cijena od:</label>
-                <input type="number" id="cijenaOd" name="cijenaOd" required>
-                <label for="cijenaDo">Cijena do:</label>
-                <input type="number" id="cijenaDo" name="cijenaDo" required>
-                <br><br>
-                <button type="button">Iscrtaj Histogram</button>
-            </form>
-        </section>
+    <h1>Statistika Nekretnina</h1>
 
-        <section class="histogram">
-            <h2>Histogram Cijena</h2>
-            <canvas id="mojChart"></canvas>
-        </section>
-    </div>
+    <div id="input-sekcija">
+
+        <div class="input-row">
+            <div class="input-item">
+                <label for="kriterij-kvadrature">Kriterij za prosječnu kvadraturu:</label>
+            </div>
+            <div class="input-item">
+                <textarea id="kriterij-kvadrature" placeholder="Format: {&quot;tip_nekretnine&quot;:&quot;Stan&quot;}"></textarea>
+            </div>
+        </div>
+        <button onclick="prikaziProsjecnuKvadraturu()">Izračunaj prosječnu kvadraturu</button>
+            <div id="rezultat-kvadrature"></div>
+        <hr class="custom-hr">
+
+
+        <div class="input-row">
+            <div class="input-item">
+                <label for="kriterij_outlier">Kriterij za outlier:</label>
+            </div>
+            <div class="input-item">
+                <textarea id="kriterij_outlier" placeholder="Format: {&quot;tip_nekretnine&quot;:&quot;Stan&quot;}"></textarea>
+            </div>
+        </div>
+        <div class="input-row">
+            <div class="input-item">
+                <label for="naziv-svojstva">Naziv svojstva:</label>
+            </div>
+            <div class="input-item">
+                <input id="naziv-svojstva" placeholder="Primjer: cijena">
+            </div>
+        </div>
+        <button onclick="prikaziOutlier()">Prikaži outlier</button>
+        <div id="rezultat-outlier"></div>
+
+        <hr class="custom-hr">
+
+        <div class="input-row">
+            <div class="input-item">
+                <label for="korisnik-id">ID korisnika:</label>
+            </div>
+            <div class="input-item">
+                <input id="korisnik-id" type="number" placeholder="Unesite ID">
+            </div>
+        </div>
+        <button onclick="prikaziMojeNekretnine()">Prikaži nekretnine</button>
+        <div id="rezultat-nekretnine"></div>
+
+
+        <hr class="custom-hr">
+
+        <h2>Histogram</h2>
+
+        <div class="input-row">
+            <div class="input-item">
+                <label for="periodi">Periodi:</label>
+            </div>
+            <div class="input-item">
+                <textarea id="periodi" placeholder="Format: [{&quot;od&quot;:2000, &quot;do&quot;:2010}, {&quot;od&quot;:2010, &quot;do&quot;:2024}]"></textarea>
+            </div>
+        </div>
+
+        <div class="input-row">
+            <div class="input-item">
+                <label for="rasponi-cijena">Cijene:</label>
+            </div>
+            <div class="input-item">
+                <textarea id="rasponi-cijena" placeholder="Format: [{&quot;od&quot;:10000, &quot;do&quot;:150000}, {&quot;od&quot;:150000, &quot;do&quot;:1000000}]"></textarea>
+            </div>
+        </div>
+        <button onclick="iscrtajHistogram()">Iscrtaj histogram</button>
+        <div id="histogrami"></div>
+        
+        <hr class="custom-hr">
+
+   </div>
+
 </body>
+
 </html>

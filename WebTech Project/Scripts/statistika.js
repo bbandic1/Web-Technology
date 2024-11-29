@@ -1,68 +1,111 @@
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("DOM je učitan!"); 
+const statistika = StatistikaNekretnina();
+statistika.init(listaNekretnina, listaKorisnika);
 
-    let statistika = StatistikaNekretnina();
+function prikaziProsjecnuKvadraturu() {
+    let kriterij;
+    try {
+        kriterij = JSON.parse(document.getElementById("kriterij-kvadrature").value);
+    } catch (e) {
+        alert("Greška: Unesite podatke u ispravnom formatu!");
+        return;
+    }
+    const rezultat = statistika.prosjecnaKvadratura(kriterij);
+    document.getElementById("rezultat-kvadrature").innerText = 
+        rezultat ? `Prosječna kvadratura: ${rezultat.toFixed(2)} m²` : "Nema podataka za navedeni kriterij.";
+}
 
-    console.log("StatistikaNekretnina objekat:", statistika);
+function prikaziOutlier() {
+    let kriterij;
+    try {
+        kriterij = JSON.parse(document.getElementById("kriterij_outlier").value);
+    } catch (e) {
+        alert("Greška: Unesite podatke u ispravnom formatu!");
+        return;
+    }
+    const nazivSvojstva = document.getElementById("naziv-svojstva").value;
+    const rezultat = statistika.outlier(kriterij, nazivSvojstva);
+    document.getElementById("rezultat-outlier").innerText =
+        rezultat ? `Outlier: ${rezultat.naziv}, Vrijednost: ${rezultat[nazivSvojstva]}` : "Nema outlier-a za proslijeđeni kriterij.";
+}
 
-    const button = document.querySelector("button");
-    const canvas = document.getElementById("mojChart");
+function prikaziMojeNekretnine() {
+    const korisnikId = parseInt(document.getElementById("korisnik-id").value);
+    const korisnik = listaKorisnika.find(k => k.id === korisnikId);
+    if (!korisnik) {
+        alert("Grešla: id tog korisnika ne postoji.");
+        return;
+    }
+    const mojeNekretnine = statistika.mojeNekretnine(korisnik);
+    document.getElementById("rezultat-nekretnine").innerHTML =
+        mojeNekretnine.length > 0 
+            ? mojeNekretnine.map(nekretnina => `<p>${nekretnina.naziv} (${nekretnina.cijena} KM)</p>`).join("")
+            : "Nema nekretnina za proslijeđeni id korisnika.";
+}
 
-    button.addEventListener("click", () => {
-        console.log("Dugme je kliknuto!"); 
+function iscrtajHistogram() {
+    const divHistogrami = document.getElementById("histogrami");
 
-        const periodOd = parseInt(document.getElementById("periodOd").value);
-        const periodDo = parseInt(document.getElementById("periodDo").value);
-        const cijenaOd = parseInt(document.getElementById("cijenaOd").value);
-        const cijenaDo = parseInt(document.getElementById("cijenaDo").value);
+    const periodiInput = document.getElementById("periodi").value.trim();
+    const rasponiCijenaInput = document.getElementById("rasponi-cijena").value.trim();
 
-        console.log({ periodOd, periodDo, cijenaOd, cijenaDo }); 
+    let periodi, rasponiCijena;
+    try {
+        periodi = JSON.parse(periodiInput);
+        rasponiCijena = JSON.parse(rasponiCijenaInput);
+    } catch (error) {
+        alert("Greška: Unesite podatke u ispravnom formatu!");
+        return;
+    }
 
-        if (isNaN(periodOd) || isNaN(periodDo) || isNaN(cijenaOd) || isNaN(cijenaDo)) {
-            console.error("Nisu unesene sve vrednosti!"); 
-            alert("Molimo unesite sve vrijednosti!");
-            return;
-        }
+    const histogramPodaci = statistika.histogramCijena(periodi, rasponiCijena);
 
-        const periodi = [{ od: periodOd, do: periodDo }];
-        const rasponiCijena = [{ od: cijenaOd, do: cijenaDo }];
+    divHistogrami.innerHTML = "";
 
-        console.log("Kreirani periodi i rasponi cijena:", periodi, rasponiCijena);
+    periodi.forEach((period, indeksPerioda) => {
+        const podaciZaPeriod = histogramPodaci.filter(
+            pod => pod.indeksPerioda === indeksPerioda
+        );
 
-        const podaciHistograma = statistika.histogramCijena(periodi, rasponiCijena);
-        console.log("Podaci za histogram:", podaciHistograma);
+        const labels = rasponiCijena.map(
+            raspon => `${raspon.od}-${raspon.do}`
+        );
+        const data = rasponiCijena.map(
+            (_, indeksRaspona) => {
+                const pod = podaciZaPeriod.find(p => p.indeksRasponaCijena === indeksRaspona);
+                return pod ? pod.brojNekretnina : 0;
+            }
+        );
 
-        const labels = rasponiCijena.map((raspon, index) => `Raspon ${index + 1}`);
-        const data = podaciHistograma.map(d => d.brojNekretnina);
+        const canvas = document.createElement("canvas");
+        canvas.id = `chart-${indeksPerioda}`;
+        divHistogrami.appendChild(canvas);
 
-        iscrtajHistogram(canvas, labels, data);
-    });
-
-    function iscrtajHistogram(canvas, labels, data) {
-        console.log("Počinje iscrtavanje histograma..."); 
-        console.log("Canvas:", canvas);
-        console.log("Labels za Chart.js:", labels);
-        console.log("Data za Chart.js:", data);
-        new Chart(canvas, {
+        new Chart(canvas.getContext("2d"), {
             type: "bar",
             data: {
                 labels: labels,
                 datasets: [{
-                    label: "Broj nekretnina",
+                    label: `Period ${period.od} - ${period.do}`,
                     data: data,
-                    backgroundColor: "rgba(75, 192, 192, 0.2)",
+                    backgroundColor: "rgba(75, 192, 192, 0.5)",
                     borderColor: "rgba(75, 192, 192, 1)",
                     borderWidth: 1,
-                }],
+                }]
             },
             options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                    },
+                responsive: true,
+                plugins: {
+                    legend: { position: "top" },
+                    title: { display: true, text: `Histogram za period ${period.od} - ${period.do}` },
                 },
-            },
+                scales: {
+                    x: { beginAtZero: true },
+                    y: { beginAtZero: true }
+                }
+            }
         });
-        console.log("Histogram iscrtan!");
-    }
-});
+    });
+}
+
+//[{"od":2000,"do":2010},{"od":2010, "do":2024}]
+//[{"od":10000, "do":150000}, {"od":150000, "do":1000000}]

@@ -6,42 +6,61 @@ let StatistikaNekretnina = function () {
     let spisakNekretnina = new SpisakNekretnina();
 
     let init = function (listaNekretnina, listaKorisnika) {
-      spisakNekretnina.init(listaNekretnina, listaKorisnika);
-      this.listaNekretnina = spisakNekretnina.listaNekretnina;
-      this.listaKorisnika = spisakNekretnina.listaKorisnika
+        spisakNekretnina.init(listaNekretnina, listaKorisnika);
+        this.listaNekretnina = spisakNekretnina.listaNekretnina;
+        this.listaKorisnika = spisakNekretnina.listaKorisnika;
     };
 
     let prosjecnaKvadratura = function (kriterij) {
-      const filtriraneNekretnine = spisakNekretnina.filtrirajNekretnine(kriterij);
-      return filtriraneNekretnine.reduce((suma, property) => suma + property.kvadratura, 0) / filteredProperties.length;
+        const filtriraneNekretnine = spisakNekretnina.filtrirajNekretnine(kriterij);
+        if (filtriraneNekretnine.length === 0) {
+            return 0; 
+        }
+        const sumaKvadratura = filtriraneNekretnine.reduce(
+            (suma, nekretnina) => suma + nekretnina.kvadratura,
+            0
+        );
+        return sumaKvadratura / filtriraneNekretnine.length;
     };
 
     let outlier = function (kriterij, nazivSvojstva) {
-
         const filtriraneNekretnine = spisakNekretnina.filtrirajNekretnine(kriterij);
-
+    
         if (filtriraneNekretnine.length === 0) {
-            return null;
+            return null; 
         }
 
-        const suma = filtriraneNekretnine.reduce((total, property) => total + property[nazivSvojstva], 0);
-        const average = suma / filtriraneNekretnine.length;
+        const suma = filtriraneNekretnine.reduce((total, nekretnina) => total + nekretnina[nazivSvojstva], 0);
+        const prosjek = suma / filtriraneNekretnine.length;
+    
+        return filtriraneNekretnine.reduce((najveciOutlier, nekretnina) => {
+            const odstupanje = Math.abs(nekretnina[nazivSvojstva] - prosjek);
+            return odstupanje > najveciOutlier.odstupanje
+                ? { nekretnina, odstupanje }
+                : najveciOutlier;
+        }, { nekretnina: null, odstupanje: 0 }).nekretnina;
+    };
 
-        return filtriraneNekretnine.reduce((maxOutlier, property) => {
-            const trenutnaRazilka = Math.abs(property[nazivSvojstva] - average);
-            return trenutnaRazilka > maxOutlier.difference ? { property, difference: trenutnaRazilka } : maxOutlier;
-        }, { property: null, difference: 0 }).property;
-    }
+    let mojeNekretnine = function (korisnik) {
+        console.log(this.listaKorisnika)
+        console.log(this.listaNekretnina)
+        const nekretnineSaUpitomKorisnika = this.listaNekretnina.filter(nekretnina => 
+            nekretnina.upiti.some(upit => upit.korisnik_id === korisnik.id)
+        );
+    
+        return nekretnineSaUpitomKorisnika.sort((a, b) => b.upiti.length - a.upiti.length);
+    };
 
-    let histogramCijena = function(periodi, rasponiCijena) {
+    let histogramCijena = function (periodi, rasponiCijena) {
         return periodi.flatMap((period, periodIndex) => {
             return rasponiCijena.map((raspon, rasponIndex) => {
-                const filtriraneNekretnine = listaNekretnina.filter(nekretnina => {
-                    return nekretnina.godina_objave >= period.od &&
-                           nekretnina.godina_objave <= period.do &&
-                           nekretnina.cijena >= raspon.od &&
-                           nekretnina.cijena <= raspon.do;
-                });
+                
+                const filtriraneNekretnine = listaNekretnina.filter(nekretnina => 
+                    nekretnina.godina_objave >= period.od &&
+                    nekretnina.godina_objave <= period.do &&
+                    nekretnina.cijena >= raspon.od &&
+                    nekretnina.cijena <= raspon.do
+                );
     
                 console.log(`Period (${period.od}-${period.do}), Raspon (${raspon.od}-${raspon.do}):`, filtriraneNekretnine);
     
@@ -51,16 +70,8 @@ let StatistikaNekretnina = function () {
                     brojNekretnina: filtriraneNekretnine.length
                 };
             });
-        }).flat();
-    };
-    
-    let mojeNekretnine = function (korisnik) {
-        const nekretnineSaUpitomKorisnika = listaNekretnina.filter(nekretnina => {
-            return nekretnina.upiti.some(upit => upit.korisnik_id === korisnik.id);
         });
-
-        return nekretnineSaUpitimaKorisnika.sort((a, b) => b.upiti.length - a.upiti.length);
-    }
+    };
     
     return {
       init: init,
