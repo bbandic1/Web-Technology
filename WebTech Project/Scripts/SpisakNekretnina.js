@@ -28,6 +28,12 @@ let SpisakNekretnina = function () {
             if (kriterij.max_cijena && nekretnina.cijena > kriterij.max_cijena) {
                 return false;
             }
+            if (kriterij.kvadratura && nekretnina.kvadratura !== kriterij.kvadratura) {
+                return false;
+            }
+            if (kriterij.cijena && nekretnina.cijena !== kriterij.cijena) {
+                return false;
+            }
             if (kriterij.tip_grijanja && nekretnina.tip_grijanja !== kriterij.tip_grijanja) {
                 return false;
             }
@@ -38,6 +44,9 @@ let SpisakNekretnina = function () {
                 return false;
             }
             if (kriterij.datum_objave && nekretnina.datum_objave !== kriterij.datum_objave) {
+                return false;
+            }
+            if (kriterij.opis && nekretnina.opis !== kriterij.opis) {
                 return false;
             }
             return true;

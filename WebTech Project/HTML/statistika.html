@@ -22,23 +22,62 @@
 
         <div class="input-row">
             <div class="input-item">
-                <label for="kriterij-kvadrature">Kriterij za prosječnu kvadraturu:</label>
+                <label for="kriterij-1">Kriterij:</label>
             </div>
             <div class="input-item">
-                <textarea id="kriterij-kvadrature" placeholder="Format: {&quot;tip_nekretnine&quot;:&quot;Stan&quot;}"></textarea>
+                <select id="kriterij-1" onchange="azurirajOpcije('1')">
+                    <option value="">Izaberite kriterij</option>
+                    <option value="tip_nekretnine">Tip nekretnine</option>
+                    <option value="naziv">Naziv</option>
+                    <option value="kvadratura">Kvadratura</option>
+                    <option value="cijena">Cijena</option>
+                    <option value="tip_grijanja">Tip grijanja</option>
+                    <option value="godina_izgradnje">Godina izgradnje</option>
+                    <option value="datum_objave">Datum objave</option>
+                    <option value="opis">Opis</option>
+                </select>
+            </div>
+        </div>
+        <div class="input-row">
+            <div class="input-item">
+                <label for="vrijednost-1">Vrijednost za kriterij:</label>
+            </div>
+            <div class="input-item">
+                <select id="vrijednost-1">
+                    <option value="">Izaberite vrijednost</option>
+                </select>
             </div>
         </div>
         <button onclick="prikaziProsjecnuKvadraturu()">Izračunaj prosječnu kvadraturu</button>
-            <div id="rezultat-kvadrature"></div>
+        <div id="rezultat-kvadrature"></div>
         <hr class="custom-hr">
-
-
+        
         <div class="input-row">
             <div class="input-item">
-                <label for="kriterij_outlier">Kriterij za outlier:</label>
+                <label for="kriterij-2">Kriterij:</label>
             </div>
             <div class="input-item">
-                <textarea id="kriterij_outlier" placeholder="Format: {&quot;tip_nekretnine&quot;:&quot;Stan&quot;}"></textarea>
+                <select id="kriterij-2" onchange="azurirajOpcije('2')">
+                    <option value="">Izaberite kriterij</option>
+                    <option value="tip_nekretnine">Tip nekretnine</option>
+                    <option value="naziv">Naziv</option>
+                    <option value="kvadratura">Kvadratura</option>
+                    <option value="cijena">Cijena</option>
+                    <option value="tip_grijanja">Tip grijanja</option>
+                    <option value="godina_izgradnje">Godina izgradnje</option>
+                    <option value="datum_objave">Datum objave</option>
+                    <option value="opis">Opis</option>
+                </select>
+            </div>
+        </div>
+        <div class="input-row">
+            <div class="input-item">
+                <label for="vrijednost-2">Vrijednost za kriterij:</label>
+            </div>
+            <div class="input-item">
+                <select id="vrijednost-2">
+                    <option value="">Izaberite vrijednost</option>
+                </select>
             </div>
         </div>
         <div class="input-row">
@@ -50,7 +89,6 @@
                     <option value="cijena">Cijena</option>
                     <option value="kvadratura">Kvadratura</option>
                     <option value="godina_izgradnje">Godina izgradnje</option>
-
                 </select>
             </div>
         </div>
@@ -83,7 +121,7 @@
                 <label for="periodi">Periodi:</label>
             </div>
             <div class="input-item">
-                <textarea id="periodi" placeholder="Format: [{&quot;od&quot;:2000, &quot;do&quot;:2010}, {&quot;od&quot;:2010, &quot;do&quot;:2024}]"></textarea>
+                <textarea id="periodi" placeholder="Format: [2000, 2010], [2010,2024]"></textarea>
             </div>
         </div>
 
@@ -92,7 +130,7 @@
                 <label for="rasponi-cijena">Cijene:</label>
             </div>
             <div class="input-item">
-                <textarea id="rasponi-cijena" placeholder="Format: [{&quot;od&quot;:10000, &quot;do&quot;:150000}, {&quot;od&quot;:150000, &quot;do&quot;:1000000}]"></textarea>
+                <textarea id="rasponi-cijena" placeholder="Format: [10000, 150000], [150000, 1000000]"></textarea>
             </div>
         </div>
         <button onclick="iscrtajHistogram()">Iscrtaj histogram</button>

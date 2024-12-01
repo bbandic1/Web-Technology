@@ -1,30 +1,78 @@
 const statistika = StatistikaNekretnina();
 statistika.init(listaNekretnina, listaKorisnika);
 
+const opcije = {
+    tip_nekretnine: ["Stan", "Kuća"],
+    naziv: ["Useljiv stan Sarajevo", "Mali poslovni prostor"],
+    kvadratura: [58, 20],
+    cijena: [232000, 32000, 70000],
+    tip_grijanja: ["plin", "struja"],
+    godina_izgradnje: [2019, 2005],
+    datum_objave: ["01.10.2023.", "01.10.2009.", "01.10.2003.", "20.08.2023."],
+    opis: ["Sociis natoque penatibus.", "Magnis dis parturient montes."]
+};
+
+function azurirajOpcije(suffix) {
+    const kriterijId = `kriterij-${suffix}`;
+    const vrijednostId = `vrijednost-${suffix}`;
+
+    const kriterij = document.getElementById(kriterijId).value;
+    const vrijednostSelect = document.getElementById(vrijednostId);
+    
+    vrijednostSelect.innerHTML = `<option value="">Izaberite vrijednost</option>`;
+    
+    if (kriterij && opcije[kriterij]) {
+        opcije[kriterij].forEach(opcija => {
+            const novaOpcija = document.createElement("option");
+            novaOpcija.value = opcija;
+            novaOpcija.textContent = opcija;
+            vrijednostSelect.appendChild(novaOpcija);
+        });
+    }
+}
+
 function prikaziProsjecnuKvadraturu() {
-    let kriterij;
-    try {
-        kriterij = JSON.parse(document.getElementById("kriterij-kvadrature").value);
-    } catch (e) {
-        alert("Greška: Unesite podatke u ispravnom formatu!");
+    const kriterij = document.getElementById("kriterij-1").value;
+    let vrijednost = document.getElementById("vrijednost-1").value;
+
+    if (kriterij == "cijena" || kriterij == "kvadratura" || kriterij == "godina_izgradnje") {
+        vrijednost = parseInt(vrijednost);
+    }
+
+    if (!kriterij || !vrijednost) {
+        alert("Molimo izaberite oba kriterija.");
         return;
     }
-    const rezultat = statistika.prosjecnaKvadratura(kriterij);
-    document.getElementById("rezultat-kvadrature").innerText = 
-        rezultat ? `Prosječna kvadratura: ${rezultat.toFixed(2)} m²` : "Nema podataka za navedeni kriterij.";
+
+    const jsonKriterij = {};
+    jsonKriterij[kriterij] = vrijednost;
+    
+    const rezultat = statistika.prosjecnaKvadratura(jsonKriterij);
+    if (rezultat) {
+        document.getElementById("rezultat-kvadrature").innerText = `Prosječna kvadratura: ${rezultat.toFixed(2)} m²`;
+    } else {
+        document.getElementById("rezultat-kvadrature").innerText = "Nema podataka za navedeni kriterij.";
+    }
 }
 
 function prikaziOutlier() {
-    let kriterij;
-    try {
-        kriterij = JSON.parse(document.getElementById("kriterij_outlier").value);
-    } catch (e) {
-        alert("Greška: Unesite podatke u ispravnom formatu!");
+    const kriterij = document.getElementById("kriterij-2").value;
+    let vrijednost = document.getElementById("vrijednost-2").value;
+
+    if (kriterij == "cijena" || kriterij == "kvadratura" || kriterij == "godina_izgradnje") {
+        vrijednost = parseInt(vrijednost);
+    }
+
+    if (!kriterij || !vrijednost) {
+        alert("Molimo izaberite oba kriterija.");
         return;
     }
 
+    const jsonKriterij = {};
+    jsonKriterij[kriterij] = vrijednost;
+
     const nazivSvojstva = document.getElementById("naziv-svojstva").value;
-    const rezultat = statistika.outlier(kriterij, nazivSvojstva);
+    const rezultat = statistika.outlier(jsonKriterij, nazivSvojstva);
     const rezultatDiv = document.getElementById("rezultat-outlier");
     if (rezultat) {
         rezultatDiv.innerText = `Outlier: ${rezultat.naziv}, Vrijednost: ${rezultat[nazivSvojstva]}`;
@@ -54,8 +102,10 @@ function iscrtajHistogram() {
 
     let periodi, rasponiCijena;
     try {
-        periodi = JSON.parse(periodiInput);
-        rasponiCijena = JSON.parse(rasponiCijenaInput);
+        periodi = transformišiPeriodi(periodiInput);
+
+        rasponiCijena = transformišiRasponiCijena(rasponiCijenaInput);
+
         console.log("Parsiran periodi:", periodi);
         console.log("Parsiran rasponi cijena:", rasponiCijena);
     } catch (error) {
@@ -122,6 +172,24 @@ function iscrtajHistogram() {
         });
         console.log(`Chart za period (${period.od}-${period.do}) je kreiran.`);
     });
+}
+
+function transformišiPeriodi(input) {
+    const periodi = input.split("],").map(period => {
+        period = period.replace("[", "").replace("]", "");
+        const [od, do_] = period.split(",");
+        return { od: parseInt(od.trim()), do: parseInt(do_.trim()) };
+    });
+    return periodi;
+}
+
+function transformišiRasponiCijena(input) {
+    const rasponi = input.split("],").map(raspon => {
+        raspon = raspon.replace("[", "").replace("]", "");
+        const [od, do_] = raspon.split(",");
+        return { od: parseInt(od.trim()), do: parseInt(do_.trim()) };
+    });
+    return rasponi;
 }
 
 //[{"od":2000,"do":2010},{"od":2010,"do":2024}]
