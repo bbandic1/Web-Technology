@@ -22,24 +22,25 @@ function prikaziOutlier() {
         alert("Greška: Unesite podatke u ispravnom formatu!");
         return;
     }
+
     const nazivSvojstva = document.getElementById("naziv-svojstva").value;
     const rezultat = statistika.outlier(kriterij, nazivSvojstva);
-    document.getElementById("rezultat-outlier").innerText =
-        rezultat ? `Outlier: ${rezultat.naziv}, Vrijednost: ${rezultat[nazivSvojstva]}` : "Nema outlier-a za proslijeđeni kriterij.";
+    const rezultatDiv = document.getElementById("rezultat-outlier");
+    if (rezultat) {
+        rezultatDiv.innerText = `Outlier: ${rezultat.naziv}, Vrijednost: ${rezultat[nazivSvojstva]}`;
+    } else {
+        rezultatDiv.innerText = "Nema outlier-a za proslijeđeni kriterij.";
+    }
 }
 
 function prikaziMojeNekretnine() {
     const korisnikId = parseInt(document.getElementById("korisnik-id").value);
     const korisnik = listaKorisnika.find(k => k.id === korisnikId);
-    if (!korisnik) {
-        alert("Grešla: id tog korisnika ne postoji.");
-        return;
-    }
+    
     const mojeNekretnine = statistika.mojeNekretnine(korisnik);
-    document.getElementById("rezultat-nekretnine").innerHTML =
-        mojeNekretnine.length > 0 
-            ? mojeNekretnine.map(nekretnina => `<p>${nekretnina.naziv} (${nekretnina.cijena} KM)</p>`).join("")
-            : "Nema nekretnina za proslijeđeni id korisnika.";
+    if (mojeNekretnine.length > 0) {
+        const nekretnineHTML = mojeNekretnine.map(nekretnina => `<p>${nekretnina.naziv} (${nekretnina.cijena} KM)</p>`).join("");
+        document.getElementById("rezultat-nekretnine").innerHTML = nekretnineHTML; }
 }
 
 function iscrtajHistogram() {

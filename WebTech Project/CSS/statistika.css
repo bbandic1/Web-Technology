@@ -17,6 +17,10 @@ h1, h2 {
     text-align: center;
 }
 
+h1 {
+    font-size:40px;
+}
+
 .custom-hr {
     border: 1px solid #000000;
     margin-bottom: 100px;
@@ -142,4 +146,21 @@ div[id^="rezultat-"] {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
     font-size: 1rem; 
     color: #000000; 
+}
+
+select {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #000000;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s ease;
+    width: 170px;
+}
+
+select.hover {
+    background-color: #e9ecef;
+    border-color: #333;
 }

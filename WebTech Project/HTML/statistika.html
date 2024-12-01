@@ -46,7 +46,12 @@
                 <label for="naziv-svojstva">Naziv svojstva:</label>
             </div>
             <div class="input-item">
-                <input id="naziv-svojstva" placeholder="Primjer: cijena">
+                <select id="naziv-svojstva">
+                    <option value="cijena">Cijena</option>
+                    <option value="kvadratura">Kvadratura</option>
+                    <option value="godina_izgradnje">Godina izgradnje</option>
+
+                </select>
             </div>
         </div>
         <button onclick="prikaziOutlier()">Prikaži outlier</button>
@@ -59,7 +64,10 @@
                 <label for="korisnik-id">ID korisnika:</label>
             </div>
             <div class="input-item">
-                <input id="korisnik-id" type="number" placeholder="Unesite ID">
+                <select id="korisnik-id" class="choice-box-korisnik">
+                    <option value="1">Korisnik 1</option>
+                    <option value="2">Korisnik 2</option>
+                </select>
             </div>
         </div>
         <button onclick="prikaziMojeNekretnine()">Prikaži nekretnine</button>
