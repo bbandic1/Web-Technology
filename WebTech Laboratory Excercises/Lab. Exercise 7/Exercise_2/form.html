@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upravljanje zadacima</title>
+</head>
+<body>
+    <h1>Dodavanje novog zadatka</h1>
+    <form action="/zadatak" method="POST">
+        <label for="id">ID zadatka:</label><br>
+        <input type="text" id="id" name="id" required><br><br>
+
+        <label for="naziv">Naziv zadatka:</label><br>
+        <input type="text" id="naziv" name="naziv" required><br><br>
+
+        <label for="opis">Opis zadatka:</label><br>
+        <textarea id="opis" name="opis" rows="4" cols="50" required></textarea><br><br>
+
+        <button type="submit">Dodaj zadatak</button>
+    </form>
+
+    <h1>Ažuriranje postojećeg zadatka</h1>
+    <form action="/zadatak/:id" method="POST" onsubmit="event.preventDefault(); updateTask();">
+        <label for="update-id">ID zadatka za ažuriranje:</label><br>
+        <input type="text" id="update-id" name="id" required><br><br>
+
+        <label for="update-naziv">Novi naziv zadatka:</label><br>
+        <input type="text" id="update-naziv" name="naziv" required><br><br>
+
+        <label for="update-opis">Novi opis zadatka:</label><br>
+        <textarea id="update-opis" name="opis" rows="4" cols="50" required></textarea><br><br>
+
+        <button type="submit">Ažuriraj zadatak</button>
+    </form>
+
+    <script src="async_script.js"></script>
+</body>
+</html>
