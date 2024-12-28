@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unos podataka</title>
+</head>
+<body>
+    <h1>Unos podataka u imenik</h1>
+    <form id="forma">
+        <label for="ime">Ime:</label>
+        <input type="text" id="ime" name="ime" required><br>
+        <label for="prezime">Prezime:</label>
+        <input type="text" id="prezime" name="prezime" required><br>
+        <label for="adresa">Adresa:</label>
+        <input type="text" id="adresa" name="adresa" required><br>
+        <label for="broj_telefona">Broj telefona:</label>
+        <input type="text" id="broj_telefona" name="broj_telefona" required><br><br>
+        <button type="button" id="posalji">Pošalji</button>
+    </form>
+
+    <h2>Unosi u imeniku:</h2>
+    <div id="tabela"></div>
+    <script type="text/javascript" src="ajaxForma.js"></script>
+</body>
+</html>
