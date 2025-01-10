@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imenik - Unos Podataka</title>
+    <script>
+        function submitForm(event) {
+            event.preventDefault(); 
+            const imePrezime = document.getElementById("imePrezime").value;
+            const adresa = document.getElementById("adresa").value;
+            const brojTelefona = document.getElementById("brojTelefona").value;
+
+            fetch("http://localhost:3000/imenik", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    ime_prezime: imePrezime,
+                    adresa: adresa,
+                    broj_telefona: brojTelefona,
+                }),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                alert(data.message);
+                document.getElementById("dataForm").reset(); // Reset forme
+            })
+            .catch((error) => {
+                console.error("Greška:", error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Unos u Imenik</h1>
+    <form id="dataForm" onsubmit="submitForm(event)">
+        <label for="imePrezime">Ime i Prezime:</label><br>
+        <input type="text" id="imePrezime" name="imePrezime" required><br><br>
+
+        <label for="adresa">Adresa:</label><br>
+        <input type="text" id="adresa" name="adresa" required><br><br>
+
+        <label for="brojTelefona">Broj Telefona:</label><br>
+        <input type="text" id="brojTelefona" name="brojTelefona" required><br><br>
+
+        <button type="submit">Unesi</button>
+    </form>
+</body>
+</html>
