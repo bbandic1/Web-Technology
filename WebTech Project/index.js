@@ -44,7 +44,8 @@ const routes = [
   { route: '/prijava.html', file: 'prijava.html' },
   { route: '/profil.html', file: 'profil.html' },
   { route: '/vijesti.html', file: 'vijesti.html'},
-  { route: '/statistika.html', file: 'statistika.html'}
+  { route: '/statistika.html', file: 'statistika.html'},
+  { route: '/mojiUpiti.html', file: 'mojiUpiti.html'}
   // Practical for adding more .html files as the project grows
 ];
 
@@ -424,6 +425,7 @@ app.get('/nekretnina/:id', async (req, res) => {
       tip_grijanja: nekretnina.tip_grijanja,
       lokacija: nekretnina.lokacija,
       datum_objave: nekretnina.datum_objave,
+      godina_izgradnje: nekretnina.godina_izgradnje,
       opis: nekretnina.opis,
       upiti: upitiZaPage
     });

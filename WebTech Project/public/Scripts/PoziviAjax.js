@@ -151,6 +151,50 @@ const PoziviAjax = (() => {
         ajax.open("POST", "http://localhost:3000/logout", true)
         ajax.send()
     }
+    
+    function impl_getMojiUpiti(fnCallback) {
+        ajaxRequest('GET', '/upiti/moji', null, (error, data) => {
+            if (error) {
+                fnCallback(error, null);
+            } else {
+                try {
+                    console.log(data);
+                    const korisnikoviUpiti = JSON.parse(data);
+                    fnCallback(null, korisnikoviUpiti);
+                } catch (parseError) {
+                    fnCallback(parseError, null);
+                }
+            }
+        });
+    }
+
+    function impl_getNekretnina(nekretnina_id, fnCallback) {
+        console.log(`Poziv za nekretninu sa ID-om: ${nekretnina_id}`);
+        const url = `/nekretnina/${nekretnina_id}`;
+        
+        ajaxRequest('GET', url, null, (error, data) => {
+            if (error) {
+                console.error("Greška prilikom slanja GET zahtjeva:", error);
+                fnCallback(error, null);
+                return;
+            }
+    
+            console.log("Odgovor sa servera za nekretninu ID:", nekretnina_id);
+            if (data) {
+                try {
+                    const nekretnina = JSON.parse(data);
+                    console.log("Podaci o nekretnini uspješno parsirani:", nekretnina);
+                    fnCallback(null, nekretnina); 
+                } catch (parseError) {
+                    console.error("Greška pri parsiranju podataka:", parseError);
+                    fnCallback(parseError, null); 
+                }
+            } else {
+                console.error("Prazan odgovor od servera za nekretninu ID:", nekretnina_id);
+                fnCallback("Prazan odgovor", null);
+            }
+        });
+    }
 
     return {
         postLogin: impl_postLogin,
@@ -158,6 +202,8 @@ const PoziviAjax = (() => {
         getKorisnik: impl_getKorisnik,
         putKorisnik: impl_putKorisnik,
         postUpit: impl_postUpit,
-        getNekretnine: impl_getNekretnine
+        getNekretnine: impl_getNekretnine,
+        getMojiUpiti: impl_getMojiUpiti,
+        getNekretnina: impl_getNekretnina
     };
 })();

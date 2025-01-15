@@ -8,63 +8,37 @@
 </head>
 
 <body>
-    
     <iframe src="meni.html"></iframe>
 
     <script src="../Scripts/carousel.js"></script>
-
-    <script src="../Scripts/nekretnine.js"></script>
+    <script src="../scripts/PoziviAjax.js"></script>
+    <script src="../Scripts/detalji_d.js"></script>
 
     <div id="osnovno">
-        <img src="../Resources/Stan/stan1.jpg" alt="Nekretnina">
-        <p><strong>Naziv:</strong> Useljiv stan Sarajevo</p>
-        <p><strong>Kvadratura:</strong> 58 m²</p>
-        <p><strong>Cijena:</strong> 232,000 KM</p>
+        <img id="nekretnina-slika" src="" alt="Nekretnina">
     </div>
 
     <h3>DETALJI</h3>
     <div id="detalji">
         <div id="kolona1">
-            <p><strong>Tip grijanja:</strong> plin</p>
-            <p><strong>Lokacija:</strong> Novo Sarajevo</p>
+            <p><strong>Tip grijanja:</strong> <span id="tip_grijanja"></span></p>
+            <p><strong>Lokacija:</strong> <span id="lokacija"></span></p>
         </div>
         <div id="kolona2">
-            <p><strong>Godina izgradnje:</strong> 2019</p>
-            <p><strong>Datum objave oglasa:</strong> 2022</p>
+            <p><strong>Godina izgradnje:</strong> <span id="godina_izgradnje"></span></p>
+            <p><strong>Datum objave oglasa:</strong> <span id="datum_objave"></span></p>
         </div>
         <div id="opis">
-            <p><strong>Opis:</strong> Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore dignissimos eos
-                tempore, mollitia doloribus vitae molestiae ullam ut repudiandae alias corrupti, rem nisi officia at
-                perferendis dolorum iusto dolores nobis!</p>
+            <p><strong>Opis:</strong> <span id="opis_text"></span></p>
         </div>
     </div>
 
     <h3>UPITI</h3>
-    <div id="upiti">
-        <div class="upit">
-            <p><strong>Username 1:</strong></p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque et architecto maiores consequuntur soluta
-                voluptas, molestias libero illo minus obcaecati pariatur provident ipsum id dicta quod. Eveniet ipsum
-                iure ullam?</p>
-        </div>
-        <div class="upit">
-            <p><strong>Username 2:</strong></p>
-            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quae dolore perferendis dolor, aperiam
-                voluptatibus neque explicabo qui, quam, illo suscipit sint quo officia dolores consequatur voluptatem.
-                Laborum dolor at placeat!</p>
-        </div>
-        <div class="upit">
-            <p><strong>Username 3:</strong></p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias minima fugit ullam voluptates?</p>
-        </div>
-        <div class="upit">
-            <p><strong>Username 4:</strong></p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tempor convallis vestibulum.</p>
-        </div>
-        <div class="carousel-navigation">
-            <div class="arrow left-arrow">&#9664;</div> 
-            <div class="arrow right-arrow">&#9654;</div> 
-        </div>
+    <div id="upiti"></div>
+
+    <div class="carousel-navigation">
+        <div class="arrow left-arrow">&#9664;</div> 
+        <div class="arrow right-arrow">&#9654;</div> 
     </div>
 </body>
 </html>
