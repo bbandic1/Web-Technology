@@ -34,3 +34,61 @@ li a {
 li a:hover {
     color: #ff9900;
 }
+
+.prijava-dugme {
+    margin: 20px auto;
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#formaDugme {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px; 
+}
+
+#formaDugme form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#formaDugme label, 
+#formaDugme input,
+#dugme {
+    font-size: 16px;
+    padding: 10px; 
+    width: 200px; 
+    margin: 6px 0; 
+    border-radius: 5px; 
+}
+
+#formaDugme label {
+    font-weight: bold; 
+    text-align: left; 
+    width: 100%; 
+    display: flex;
+    justify-content: center; 
+}
+
+#dugme {
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#dugme:hover {
+    background-color: #555; 
+}
+
+#formaDugme input[type="text"],
+#formaDugme input[type="password"] {
+    width: 250px; 
+}

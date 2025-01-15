@@ -43,6 +43,8 @@ const routes = [
   { route: '/meni.html', file: 'meni.html' },
   { route: '/prijava.html', file: 'prijava.html' },
   { route: '/profil.html', file: 'profil.html' },
+  { route: '/vijesti.html', file: 'vijesti.html'},
+  { route: '/statistika.html', file: 'statistika.html'}
   // Practical for adding more .html files as the project grows
 ];
 
@@ -314,7 +316,7 @@ app.get('/upiti/moji', async (req, res) => {
         .map((upit) => {
           console.log(`Nađeni upit za korisnika: ${upit.tekst_upita}`);
           return {
-            korisnik_id: nekretnina.id,  
+            nekretnina_id: nekretnina.id,  
             tekst_upita: upit.tekst_upita,
           };
         });
