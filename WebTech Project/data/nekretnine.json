@@ -18,6 +18,22 @@
       {
         "korisnik_id": 2,
         "tekst_upita": "Phasellus viverra nulla."
+      },
+      {
+        "korisnik_id": 1,
+        "tekst_upita": "Proba 1."
+      },
+      {
+        "korisnik_id": 1,
+        "tekst_upita": "Proba 2."
+      },
+      {
+        "korisnik_id": 2,
+        "tekst_upita": "Proba 1."
+      },
+      {
+        "korisnik_id": 2,
+        "tekst_upita": "Proba 2."
       }
     ]
   },

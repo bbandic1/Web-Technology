@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log("Podaci o nekretnini uspješno učitani:", nekretnina);
 
         if (nekretnina) {
+            
             const nekretninaSlika = document.querySelector('#nekretnina-slika');
             if (nekretninaSlika) {
                 nekretninaSlika.src = `../Resources/Stan/stan1.jpg`;
@@ -100,22 +101,67 @@ if (detaljiElem) {
 }
 
             let upitiHTML = '';
-            nekretnina.upiti.forEach(upit => {
-                upitiHTML += `<div class="upit"><p><strong>Username ${upit.korisnik_id}:</strong></p><p>${upit.tekst_upita}</p></div>`;
-                console.log("Dodavanje upita za korisnika:", upit.korisnik_id);
+            let trenutnaStranica = 0;  
+            const upitiPoStranici = 3; 
+            let position = 0;
+            let sviUpiti = nekretnina.upiti.slice(0, upitiPoStranici); 
+
+            function renderUpiti() {
+                upitiHTML = '';
+
+                sviUpiti.forEach(upit => {
+                    upitiHTML += `<div class="upit"><p><strong>Username ${upit.korisnik_id}:</strong></p><p>${upit.tekst_upita}</p></div>`;
+                    console.log("Dodavanje upita za korisnika:", upit.korisnik_id);
+                });
+
+                upitiHTML += `
+                    <div class="carousel-navigation">
+                        <div class="arrow left-arrow">&#9664;</div>
+                        <div class="arrow right-arrow">&#9654;</div>
+                    </div>
+                `;
+
+                document.querySelector('#upiti').innerHTML = upitiHTML;
+                console.log("Upiti uspješno renderirani.");
+
+                pokreniCarousel();
+            }
+
+            function loadNextPage() {
+                PoziviAjax.getNextUpiti(nekretninaId, trenutnaStranica + 1, function(error, noviUpiti) {
+                    if (error) {
+                        console.error("Greška pri učitavanju novih upita:", error);
+                        return;
+                    }
+
+                    if (noviUpiti && noviUpiti.length > 0) {
+                        sviUpiti = sviUpiti.concat(noviUpiti); 
+                        trenutnaStranica++;  
+                        renderUpiti(); 
+                    } else {
+                        console.log("Nema više novih upita.");
+                    }
+                });
+            }
+
+            renderUpiti();
+
+            const rightArrow = document.querySelector(".right-arrow");
+            const leftArrow = document.querySelector(".left-arrow");
+            rightArrow.addEventListener("click", function() {
+                position++;
+                if (sviUpiti.length === (position+1)) {
+                    loadNextPage();
+                }
+            });
+            leftArrow.addEventListener("click", function() {
+                position--;
+                if (position<0) {
+                    position++;
+                    loadNextPage();
+                }
             });
 
-            upitiHTML += `
-                <div class="carousel-navigation">
-                    <div class="arrow left-arrow">&#9664;</div>
-                    <div class="arrow right-arrow">&#9654;</div>
-                </div>
-            `;
-            
-            document.querySelector('#upiti').innerHTML = upitiHTML;
-            console.log("Upiti uspješno dodani.");
-
-            pokreniCarousel();
         } else {
             console.error("Nekretnina sa ID-om " + nekretninaId + " nije pronađena.");
         }
