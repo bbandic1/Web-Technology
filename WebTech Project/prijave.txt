@@ -145,3 +145,6 @@
 [2025-01-15T04:41:12.595Z] - username: "username1" - status: "uspješno"
 [2025-01-15T05:35:16.446Z] - username: "username1" - status: "uspješno"
 [2025-01-15T05:35:40.824Z] - username: "username2" - status: "uspješno"
+[2025-01-15T05:39:54.113Z] - username: "username2" - status: "uspješno"
+[2025-01-15T23:54:00.629Z] - username: "username2" - status: "uspješno"
+[2025-01-16T00:20:14.035Z] - username: "username2" - status: "uspješno"

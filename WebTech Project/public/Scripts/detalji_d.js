@@ -44,36 +44,78 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             const detaljiElem = document.querySelector('#detalji');
-            if (detaljiElem) {
-                const kolona1Elem = detaljiElem.querySelector('#kolona1');
-                const kolona2Elem = detaljiElem.querySelector('#kolona2');
-                const opisElem = detaljiElem.querySelector('#opis p');
 
-                if (kolona1Elem) {
-                    kolona1Elem.querySelector('p:nth-child(1)').innerHTML = `<strong>Tip grijanja:</strong> ${nekretnina.tip_grijanja}`;
-                    kolona1Elem.querySelector('p:nth-child(2)').innerHTML = `<strong>Lokacija:</strong> ${nekretnina.lokacija}`;
+if (detaljiElem) {
+    const kolona1Elem = detaljiElem.querySelector('#kolona1');
+    const kolona2Elem = detaljiElem.querySelector('#kolona2');
+    const opisElem = detaljiElem.querySelector('#opis p');
+
+    if (kolona1Elem) {
+        kolona1Elem.innerHTML = ''; 
+
+        const tipGrijanjaElem = document.createElement('p');
+        tipGrijanjaElem.innerHTML = `<strong>Tip grijanja:</strong> ${nekretnina.tip_grijanja}`;
+        kolona1Elem.appendChild(tipGrijanjaElem);
+
+        const lokacijaLink = document.createElement('a');
+        lokacijaLink.href = '#';
+        lokacijaLink.innerHTML = `<strong>Lokacija:</strong> ${nekretnina.lokacija}`;
+        lokacijaLink.addEventListener('click', function(event) {
+            event.preventDefault(); 
+            console.log(`Kliknuta lokacija: ${nekretnina.lokacija}`);
+
+            PoziviAjax.getTop5Nekretnina(nekretnina.lokacija, function(error, topNekretnine) {
+                if (error) {
+                    console.error("Greška pri dohvaćanju Top 5 nekretnina:", error);
+                    return;
                 }
+                sessionStorage.setItem('top5Nekretnine', JSON.stringify(topNekretnine));
+                window.location.href = 'getTop5Nekretnina.html';
+            });
+        });
 
-                if (kolona2Elem) {
-                    const godinaIzgradnje = nekretnina.godina_izgradnje ? nekretnina.godina_izgradnje : 'Nema podataka';
-                    kolona2Elem.querySelector('p:nth-child(1)').innerHTML = `<strong>Godina izgradnje:</strong> ${godinaIzgradnje}`;
-                    kolona2Elem.querySelector('p:nth-child(2)').innerHTML = `<strong>Datum objave oglasa:</strong> ${nekretnina.datum_objave}`;
-                }
+        kolona1Elem.appendChild(lokacijaLink);
+    }
 
-                if (opisElem) opisElem.innerHTML = `<strong>Opis:</strong> ${nekretnina.opis}`;
+    if (kolona2Elem) {
+        kolona2Elem.innerHTML = ''; 
 
-                console.log("Detalji nekretnine postavljeni.");
-            } else {
-                console.error("Element sa ID 'detalji' nije pronađen.");
-            }
+        const godinaIzgradnjeElem = document.createElement('p');
+        const godinaIzgradnje = nekretnina.godina_izgradnje ? nekretnina.godina_izgradnje : 'Nema podataka';
+        godinaIzgradnjeElem.innerHTML = `<strong>Godina izgradnje:</strong> ${godinaIzgradnje}`;
+        kolona2Elem.appendChild(godinaIzgradnjeElem);
+
+        const datumObjaveElem = document.createElement('p');
+        datumObjaveElem.innerHTML = `<strong>Datum objave oglasa:</strong> ${nekretnina.datum_objave}`;
+        kolona2Elem.appendChild(datumObjaveElem);
+    }
+
+    if (opisElem) {
+        opisElem.innerHTML = `<strong>Opis:</strong> ${nekretnina.opis}`;
+    }
+
+    console.log("Detalji nekretnine postavljeni.");
+} else {
+    console.error("Element sa ID 'detalji' nije pronađen.");
+}
 
             let upitiHTML = '';
             nekretnina.upiti.forEach(upit => {
                 upitiHTML += `<div class="upit"><p><strong>Username ${upit.korisnik_id}:</strong></p><p>${upit.tekst_upita}</p></div>`;
                 console.log("Dodavanje upita za korisnika:", upit.korisnik_id);
             });
+
+            upitiHTML += `
+                <div class="carousel-navigation">
+                    <div class="arrow left-arrow">&#9664;</div>
+                    <div class="arrow right-arrow">&#9654;</div>
+                </div>
+            `;
+            
             document.querySelector('#upiti').innerHTML = upitiHTML;
             console.log("Upiti uspješno dodani.");
+
+            pokreniCarousel();
         } else {
             console.error("Nekretnina sa ID-om " + nekretninaId + " nije pronađena.");
         }

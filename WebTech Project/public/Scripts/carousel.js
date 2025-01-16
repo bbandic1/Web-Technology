@@ -1,63 +1,37 @@
-function postaviCarousel() {
+function pokreniCarousel() {
+    console.log("Ponovna inicijalizacija carousel-a.");
+
     const upiti = document.querySelectorAll("#upiti .upit");
-    const leftArrow = document.querySelector(".carousel-navigation .left-arrow");
-    const rightArrow = document.querySelector(".carousel-navigation .right-arrow");
+    const leftArrow = document.querySelector(".left-arrow");
+    const rightArrow = document.querySelector(".right-arrow");
+
     let trenutniIndex = 0;
 
-    if (!upiti || upiti.length === 0 || !leftArrow || !rightArrow) {
-        return;
-    }
-
-    function prikažiSveUpite() {
-        upiti.forEach(upit => {
-            upit.style.display = "block";
-        });
-    }
-
-    function prikažiUpit(index) {
+    function prikaziUpit(index) {
         upiti.forEach((upit, i) => {
-            upit.style.display = i === index ? "block" : "none";
+            upit.classList.remove("show");
+            upit.style.display = "none";
         });
+
+        const trenutniUpit = upiti[index];
+        trenutniUpit.classList.add("show");
+        trenutniUpit.style.display = "block";
     }
 
-    function prikažiSljedeći() {
+    function prikaziSljedeci() {
         trenutniIndex = (trenutniIndex + 1) % upiti.length;
-        prikažiUpit(trenutniIndex);
+        prikaziUpit(trenutniIndex);
     }
 
-    function prikažiPrethodni() {
+    function prikaziPrethodni() {
         trenutniIndex = (trenutniIndex - 1 + upiti.length) % upiti.length;
-        prikažiUpit(trenutniIndex);
+        prikaziUpit(trenutniIndex);
     }
-
-    function ažurirajView() {
-        const screenWidth = window.innerWidth;
-
-        if (screenWidth <= 599) {
-            if (upiti.length > 1) {
-                prikažiUpit(trenutniIndex);
-                leftArrow.style.display = "block";
-                rightArrow.style.display = "block";
-            } else {
-                prikažiUpit(0); 
-                leftArrow.style.display = "none";
-                rightArrow.style.display = "none";
-            }
-        } else {
-            prikažiSveUpite();
-            leftArrow.style.display = "none";
-            rightArrow.style.display = "none";
-        }
-    }
-
-    ažurirajView();
 
     if (upiti.length > 1) {
-        leftArrow.addEventListener("click", prikažiPrethodni);
-        rightArrow.addEventListener("click", prikažiSljedeći);
+        leftArrow.addEventListener("click", prikaziPrethodni);
+        rightArrow.addEventListener("click", prikaziSljedeci);
     }
 
-    window.addEventListener("resize", ažurirajView);
+    prikaziUpit(trenutniIndex);
 }
-
-document.addEventListener("DOMContentLoaded", postaviCarousel);

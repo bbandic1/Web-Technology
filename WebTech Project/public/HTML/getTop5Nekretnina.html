@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="bs-BA">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 5 Nekretnina</title>
+    <link rel="stylesheet" href="../CSS/getTopop5Nekretnina.css">
+</head>
+<body>
+    <iframe src="meni.html"></iframe>
+    
+    <h1 class="centrirani-naslov"> Top 5 Nekretnina</h1>
+    <div id="top5-nekretnine" class="grid-lista-nekretnina"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const top5Nekretnine = JSON.parse(sessionStorage.getItem('top5Nekretnine'));
+            const top5Container = document.querySelector('#top5-nekretnine');
+
+            if (top5Nekretnine && top5Nekretnine.length > 0) {
+                top5Nekretnine.forEach(nekretnina => {
+                    const nekretninaDiv = document.createElement('div');
+                    nekretninaDiv.classList.add('nekretnina');
+                    nekretninaDiv.innerHTML = `
+                        <img class="slika-nekretnine" src="../Resources/Stan/stan2.jpg" alt="Stan 2">
+                        <p><strong>Naziv:</strong> ${nekretnina.naziv}</p>
+                        <p><strong>Kvadratura:</strong> ${nekretnina.kvadratura} m²</p>
+                        <p><strong>Cijena:</strong> ${nekretnina.cijena} KM</p>
+                    `;
+                    top5Container.appendChild(nekretninaDiv);
+                });
+            } else {
+                top5Container.innerHTML = `<p>Nema dostupnih nekretnina za ovu lokaciju.</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

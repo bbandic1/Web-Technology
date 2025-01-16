@@ -194,8 +194,50 @@ const PoziviAjax = (() => {
                 fnCallback("Prazan odgovor", null);
             }
         });
+ 
     }
 
+    function impl_getTop5Nekretnina(lokacija, callback) {
+        const url = `/nekretnine/top5?lokacija=${encodeURIComponent(lokacija)}`;
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP greška! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => callback(null, data))
+            .catch(error => callback(error, null));
+        }
+
+        function impl_getNextUpiti(nekretnina_id, page, fnCallback) {
+            console.log(`Dohvaćanje upita za nekretninu ID: ${nekretnina_id}, stranica: ${page}`);
+            const url = `/next/upiti/nekretnina/${nekretnina_id}?page=${encodeURIComponent(page)}`;
+        
+            ajaxRequest('GET', url, null, (error, data) => {
+                if (error) {
+                    console.error("Greška prilikom slanja GET zahtjeva za upite:", error);
+                    fnCallback(error, null);
+                    return;
+                }
+        
+                console.log("Odgovor sa servera za upite nekretnine ID:", nekretnina_id);
+                if (data) {
+                    try {
+                        const upitiZaPage = JSON.parse(data);
+                        console.log("Podaci o upitima uspješno parsirani:", upitiZaPage);
+                        fnCallback(null, upitiZaPage);
+                    } catch (parseError) {
+                        console.error("Greška pri parsiranju podataka za upite:", parseError);
+                        fnCallback(parseError, null);
+                    }
+                } else {
+                    console.error("Prazan odgovor od servera za upite nekretnine ID:", nekretnina_id);
+                    fnCallback("Prazan odgovor", null);
+                }
+            });
+        }
+        
     return {
         postLogin: impl_postLogin,
         postLogout: impl_postLogout,
@@ -204,6 +246,8 @@ const PoziviAjax = (() => {
         postUpit: impl_postUpit,
         getNekretnine: impl_getNekretnine,
         getMojiUpiti: impl_getMojiUpiti,
-        getNekretnina: impl_getNekretnina
+        getTop5Nekretnina: impl_getTop5Nekretnina,
+        getNekretnina: impl_getNekretnina,
+        getNextUpiti: impl_getNextUpiti
     };
 })();
