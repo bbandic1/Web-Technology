@@ -28,7 +28,7 @@ module.exports = (sequelize) => {
         },
         trezeniDatum: {
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: true,
             field: 'trazeniDatum',
         },
         odobren: {

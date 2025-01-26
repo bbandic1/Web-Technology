@@ -18,7 +18,7 @@ window.onload = function() {
             const red = document.createElement('tr');
             red.innerHTML = `
                 <td>${upit.nekretnina_id !== undefined ? upit.nekretnina_id : 'N/A'}</td> 
-                <td>${upit.tekst_upita}</td>
+                <td>${upit.tekst}</td>
             `;
             tabelaBody.appendChild(red);
         });
