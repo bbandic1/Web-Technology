@@ -4,6 +4,28 @@ const path = require('path');
 const fs = require('fs').promises; // Using asynchronus API for file read and write
 const bcrypt = require('bcrypt');
 
+const db = require('./public/Scripts/DB/db');
+const sequelize = db.sequelize;
+
+const importKorisnik = require('./public/Scripts/DB/Korisnik');
+const Korisnik = importKorisnik(sequelize);
+const importNekretnina = require('./public/Scripts/DB/Nekretnina');
+const Nekretnina = importNekretnina(sequelize);
+const importUpit = require('./public/Scripts/DB/Upit');
+const Upit = importUpit(sequelize);
+const importZahtjev = require('./public/Scripts/DB/Zahtjev');
+const Zahtjev = importZahtjev(sequelize);
+const importPonuda = require('./public/Scripts/DB/Ponuda');
+const Ponuda = importPonuda(sequelize);
+
+sequelize.sync({alter: true}).then(() => {
+  console.log('Database synchronized');
+}).catch(err => {
+  console.error('Error syncing databse:', err);
+})
+
+console.log(db);
+
 const app = express();
 const PORT = 3000;
 
