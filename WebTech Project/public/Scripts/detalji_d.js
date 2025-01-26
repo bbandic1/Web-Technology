@@ -100,69 +100,272 @@ if (detaljiElem) {
     console.error("Element sa ID 'detalji' nije pronađen.");
 }
 
-            let upitiHTML = '';
-            let trenutnaStranica = 0;  
-            const upitiPoStranici = 3; 
-            let position = 0;
-            let sviUpiti = nekretnina.upiti.slice(0, upitiPoStranici); 
+const tipInteresovanja = document.querySelector("#tip-interesovanja");
+const interesovanjeFields = document.querySelector("#interesovanje-fields");
+const interesovanjeForm = document.querySelector("#interesovanje-form");
 
-            function renderUpiti() {
-                upitiHTML = '';
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log("Fetching query parameter:", param);
+    return urlParams.get(param);
+}
 
-                sviUpiti.forEach(upit => {
-                    upitiHTML += `<div class="upit"><p><strong>Username ${upit.korisnik_id}:</strong></p><p>${upit.tekst_upita}</p></div>`;
-                    console.log("Dodavanje upita za korisnika:", upit.korisnik_id);
-                });
+const urlParams = new URLSearchParams(window.location.search);
+const nekretninaId = getQueryParam("id");
+console.log("Retrieved nekretninaId:", nekretninaId);
 
-                upitiHTML += `
-                    <div class="carousel-navigation">
-                        <div class="arrow left-arrow">&#9664;</div>
-                        <div class="arrow right-arrow">&#9654;</div>
-                    </div>
-                `;
 
-                document.querySelector('#upiti').innerHTML = upitiHTML;
-                console.log("Upiti uspješno renderirani.");
+if (!nekretninaId) {
+    document.body.innerHTML = "<p>Nekretnina nije pronađena!</p>";
+    return;
+}
 
-                pokreniCarousel();
+function updateFormFields() {
+    const selectedTip = tipInteresovanja.value;
+    interesovanjeFields.innerHTML = ""; // briši prijašnje
+
+    if (selectedTip === "upit") { //polja za upit
+        interesovanjeFields.innerHTML = `
+            <label for="tekst-upita">Tekst:</label>
+            <textarea id="tekst-upita" name="tekst" required></textarea>
+        `;
+    } else if (selectedTip === "zahtjev") {
+        interesovanjeFields.innerHTML = `
+            <label for="tekst-zahtjeva">Tekst:</label>
+            <textarea id="tekst-zahtjeva" name="tekst" required></textarea>
+            <label for="trazeni-datum">Traženi datum:</label>
+            <input type="date" id="trazeni-datum" name="trazeniDatum" required>
+        `;
+    } else if (selectedTip === "ponuda") {
+        // Fetch linked offers if the user is logged in
+        PoziviAjax.getLinkedPonude(nekretninaId, function (error, ponude) {
+            if (error) {
+                console.error("Greška pri dohvaćanju povezanih ponuda:", error);
+                return;
             }
+            console.log(ponude);
+            const options = ponude.map((ponuda) =>
+                `<option value="${ponuda.id}">Ponuda ID: ${ponuda.id} - ${ponuda.cijenaPonude} KM</option>`
+            );
+            const isDisabled = options.length === 0;
 
-            function loadNextPage() {
-                PoziviAjax.getNextUpiti(nekretninaId, trenutnaStranica + 1, function(error, noviUpiti) {
-                    if (error) {
-                        console.error("Greška pri učitavanju novih upita:", error);
-                        return;
-                    }
+            interesovanjeFields.innerHTML = `
+                <label for="tekst-ponude">Tekst:</label>
+                <textarea id="tekst-ponude" name="tekst" required></textarea>
+                <label for="ponuda-cijena">Ponuda cijena:</label>
+                <input type="number" id="ponuda-cijena" name="ponudaCijene" required>
+                <label for="datum-ponude">Datum ponude:</label>
+                <input type="date" id="datum-ponude" name="datumPonude" required>
+                <label for="vezana-ponuda">ID vezane ponude:</label>
+                <select id="vezana-ponuda" name="idVezanePonude" ${isDisabled ? "disabled" : ""}>
+                    <option value="" disabled selected>Odaberite vezanu ponudu</option>
+                    ${options.join("")}
+                </select>
+                ${isDisabled ? "<p>Nema ranijih ponuda.</p>" : ""}
+            `;
+        });
+    }
+}
 
-                    if (noviUpiti && noviUpiti.length > 0) {
-                        sviUpiti = sviUpiti.concat(noviUpiti); 
-                        trenutnaStranica++;  
-                        renderUpiti(); 
-                    } else {
-                        console.log("Nema više novih upita.");
-                    }
-                });
+tipInteresovanja.addEventListener("change",updateFormFields);
+updateFormFields(); //pocetna inicijalizacija
+
+// predavanje forme
+
+interesovanjeForm.addEventListener("submit", function (event) {
+
+    event.preventDefault();
+
+    const formData = new FormData(interesovanjeForm);
+    const tip = formData.get("tip");
+    const body = {};
+    body.nekretnina_id = nekretninaId;
+
+    if (tip === "upit") {
+
+        body.tekst = formData.get("tekst");
+
+        PoziviAjax.postUpit(body.nekretnina_id, body.tekst, function (error, response) {
+            if (error) {
+                console.error("Greška pri dodavanju interesovanja: ", error);
+                alert("Dodavanje interesovanja nije uspjelo!");
+                return;
             }
+            alert("Upit uspješno dodan!");
+            interesovanjeForm.reset();
+            updateFormFields(); // Reset fields
+        });
 
-            renderUpiti();
+    } else if (tip === "zahtjev") {
+        body.tekst = formData.get("tekst");
+        body.trazeni_datum = formData.get("trazeniDatum");
 
-            const rightArrow = document.querySelector(".right-arrow");
-            const leftArrow = document.querySelector(".left-arrow");
-            rightArrow.addEventListener("click", function() {
-                position++;
-                if (sviUpiti.length === (position+1)) {
-                    loadNextPage();
-                }
-            });
-            leftArrow.addEventListener("click", function() {
-                position--;
-                if (position<0) {
-                    position++;
-                    loadNextPage();
-                }
-            });
+        PoziviAjax.postZahtjev(body.nekretnina_id, body.tekst, body.trazeni_datum, function (error, response) {
+            if (error) {
+                console.error("Greška pri dodavanju interesovanja: ", error);
+                alert("Dodavanje interesovanja nije uspjelo!");
+                return;
+            }
+            alert("Zahtjev uspješno dodan!");
+            interesovanjeForm.reset();
+            updateFormFields(); // Reset fields
+        });
 
-        } else {
+    } else if (tip === "ponuda") {
+        body.tekst = formData.get("tekst");
+        body.cijenaPonude = parseFloat(formData.get("ponudaCijene"));
+        body.datumPonude = formData.get("datumPonude");
+        body.vezanaPonuda = formData.get("idVezanePonude") || null;
+        body.odbijenaPonuda = false; 
+
+        PoziviAjax.postPonuda(body.nekretnina_id, body.tekst, body.cijenaPonude, body.datumPonude, body.vezanaPonuda, body.odbijenaPonuda,function (error, response) {
+            if (error) {
+                console.error("Greška pri dodavanju interesovanja: ", error);
+                alert("Dodavanje interesovanja nije uspjelo!");
+                return;
+            }
+            alert("Ponuda uspješno dodana!");
+            interesovanjeForm.reset();
+            updateFormFields(); // Reset fields
+        });
+    }
+});
+const upitiList = document.getElementById('upiti-list');
+const zahtjeviList = document.getElementById('zahtjevi-list');
+const ponudeList = document.getElementById('ponude-list');
+
+// Globalne varijable
+let upiti = [];
+let zahtjevi = [];
+let ponude = [];
+let currentUpitIndex = 0;
+let currentZahtjevIndex = 0;
+let currentPonudaIndex = 0;
+let username = ''; // Trenutni korisnički username
+
+// Funkcija za učitavanje podataka
+function loadData() {
+    PoziviAjax.getInteresovanja(nekretninaId, function (error, data) {
+        if (error) {
+            console.error('Greška pri učitavanju interesovanja:', error);
+            return;
+        }
+
+        console.log(data); // Provjera povrata podataka
+
+        upiti = data.Upit || [];
+        zahtjevi = data.Zahtjev || [];
+        ponude = data.Ponuda || [];
+
+        // Dohvaćanje trenutnog korisničkog imena
+        PoziviAjax.getKorisnik(function (error, korisnik) {
+            if (error) {
+                console.error('Greška pri učitavanju korisničkih informacija:', error);
+                return;
+            }
+            
+            console.log(username);
+            username = korisnik.username; // Postavljanje trenutnog username-a
+
+            // Prikazivanje podataka
+            displayData(upiti, upitiList, 'upit');
+            displayData(zahtjevi, zahtjeviList, 'zahtjev');
+            displayData(ponude, ponudeList, 'ponuda');
+
+            // Prikazivanje prvih elemenata
+            showItem(upiti, currentUpitIndex);
+            showItem(zahtjevi, currentZahtjevIndex);
+            showItem(ponude, currentPonudaIndex);
+        });
+    });
+}
+
+// Funkcija za prikazivanje podataka u carousel-u
+function displayData(list, container, type) {
+    container.innerHTML = '';
+    list.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('carousel-item');
+
+        if (type === 'upit') {
+            div.innerHTML = `
+                <p><strong>ID:</strong> ${item.id}</p>
+                ${username === 'admin' ? `<p><strong>Korisnik ID:</strong> ${item.korisnik_id}</p>` : ''}
+                <p><strong>Tekst:</strong> ${item.tekst}</p>
+                ${username === 'admin' ? `<p><strong>Nekretnina ID:</strong> ${item.nekretnina_id}</p>` : ''}
+            `;
+        } else if (type === 'zahtjev') {
+            div.innerHTML = `
+                <p><strong>ID:</strong> ${item.id}</p>
+                ${username === 'admin' ? `<p><strong>Korisnik ID:</strong> ${item.korisnik_id}</p>` : ''}
+                <p><strong>Tekst:</strong> ${item.tekst}</p>
+                ${username === 'admin' ? `<p><strong>Nekretnina ID:</strong> ${item.nekretnina_id}</p>` : ''}
+                <p><strong>Traženi datum:</strong> ${item.trezeniDatum || 'N/A'}</p>
+                <p><strong>Odobren:</strong> ${item.odobren ? 'Da' : 'Ne'}</p>
+            `;
+        } else if (type === 'ponuda') {
+            div.innerHTML = `
+                <p><strong>ID:</strong> ${item.id}</p>
+                ${username === 'admin' ? `<p><strong>Korisnik ID:</strong> ${item.korisnik_id}</p>` : ''}
+                <p><strong>Tekst upita:</strong> ${item.tekst_upita}</p>
+                ${username === 'admin' ? `<p><strong>Nekretnina ID:</strong> ${item.nekretnina_id}</p>` : ''}
+                ${username === 'admin' ? `<p><strong>Cijena ponude:</strong> ${item.cijenaPonude}</p>` : ''}
+                <p><strong>Datum ponude:</strong> ${item.datumPonude}</p>
+                ${username === 'admin' ? `<p><strong>Odbijena ponuda:</strong> ${item.odbijenaPonuda ? 'Da' : 'Ne'}</p>` : ''}
+                ${username === 'admin' ? `<p><strong>Vezana ponuda:</strong> ${item.vezanaPonuda || 'N/A'}</p>` : ''}
+                ${username === 'admin' ? `<p><strong>Korisnik:</strong> ${item.Korisnik ? `${item.Korisnik.ime} ${item.Korisnik.prezime}` : 'N/A'}</p>` : ''}
+            `;
+        }
+
+        container.appendChild(div);
+    });
+}
+
+// Funkcija za prikazivanje trenutnog elementa
+function showItem(list, index) {
+    const container = list === upiti ? upitiList : list === zahtjevi ? zahtjeviList : ponudeList;
+    const items = container.getElementsByClassName('carousel-item');
+    Array.from(items).forEach(item => item.style.display = 'none');
+    if (items[index]) {
+        items[index].style.display = 'block';
+    }
+}
+
+// Navigacijske funkcije s kružnim ponašanjem
+document.getElementById('prev-upit').addEventListener('click', () => {
+    currentUpitIndex = (currentUpitIndex - 1 + upiti.length) % upiti.length;
+    showItem(upiti, currentUpitIndex);
+});
+
+document.getElementById('next-upit').addEventListener('click', () => {
+    currentUpitIndex = (currentUpitIndex + 1) % upiti.length;
+    showItem(upiti, currentUpitIndex);
+});
+
+document.getElementById('prev-zahtjev').addEventListener('click', () => {
+    currentZahtjevIndex = (currentZahtjevIndex - 1 + zahtjevi.length) % zahtjevi.length;
+    showItem(zahtjevi, currentZahtjevIndex);
+});
+
+document.getElementById('next-zahtjev').addEventListener('click', () => {
+    currentZahtjevIndex = (currentZahtjevIndex + 1) % zahtjevi.length;
+    showItem(zahtjevi, currentZahtjevIndex);
+});
+
+document.getElementById('prev-ponuda').addEventListener('click', () => {
+    currentPonudaIndex = (currentPonudaIndex - 1 + ponude.length) % ponude.length;
+    showItem(ponude, currentPonudaIndex);
+});
+
+document.getElementById('next-ponuda').addEventListener('click', () => {
+    currentPonudaIndex = (currentPonudaIndex + 1) % ponude.length;
+    showItem(ponude, currentPonudaIndex);
+});
+
+// Učitavanje podataka na početku
+loadData();
+    
+     } else {
             console.error("Nekretnina sa ID-om " + nekretninaId + " nije pronađena.");
         }
     });

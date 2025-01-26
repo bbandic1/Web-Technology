@@ -255,7 +255,7 @@ app.post('/upit', async (req, res) => {
     return res.status(401).json({ greska: 'Neautorizovan pristup' });
   }
 
-  const { id, tekst_upita } = req.body;
+  const { id, tekst} = req.body;
 
   try {
     const loggedInUser = await db.Korisnik.findOne({
@@ -283,7 +283,7 @@ app.post('/upit', async (req, res) => {
     await db.Upit.create({
       korisnik_id: loggedInUser.id,
       nekretnina_id: nekretnina.id,  
-      tekst: tekst_upita,
+      tekst: tekst,
     });
 
     res.status(200).json({ poruka: 'Upit je uspješno dodat.' });
@@ -733,7 +733,7 @@ app.post("/nekretnina/:id/ponuda", async (req, res) => {
       }
 
       const chainHasRejectedPonuda = await db.Ponuda.findOne({
-        where: { vezana_ponuda_id: idVezanePonude, odbijenaPonuda: true },
+        where: { vezanaPonuda: idVezanePonude, odbijenaPonuda: true },
       });
 
       if (chainHasRejectedPonuda) {
@@ -741,8 +741,6 @@ app.post("/nekretnina/:id/ponuda", async (req, res) => {
           message: "Daljnje ponude se ne mogu postaviti jer je prijasnja ponuda u lancu odbijena.",
         });
       }
-
-      
       const isAdmin = loggedInUser.admin;
       const isUserLinkedToPonuda =
         vezanaPonuda.korisnik_id === loggedInUser.id || vezanaPonuda.idVezanePonude === loggedInUser.id;
@@ -754,20 +752,19 @@ app.post("/nekretnina/:id/ponuda", async (req, res) => {
       }
     }
 
-    
     if (odbijenaPonuda && idVezanePonude === null) {
       return res.status(406).json({
         message: "Odbijena ponuda mora biti vezana za prijašnju ponudu.",
       });
     }
 
-    
     const currentDate = new Date();
-    if (new Date(datumPonude) > currentDate) {
+    if (new Date(datumPonude) < currentDate) {
       return res.status(407).json({
         message: "datumPonude invalid.",
       });
     }
+
     console.log("Mapped fields:");
     console.log({
       korisnik_id: loggedInUser.id,
@@ -776,7 +773,7 @@ app.post("/nekretnina/:id/ponuda", async (req, res) => {
       cijena_ponude: ponudaCijene,
       datum_ponude: datumPonude,
       odbijena_ponuda: odbijenaPonuda,
-      vezana_ponuda_id: idVezanePonude,
+      vezanaPonuda: idVezanePonude,
     });
     
     const newPonuda = await db.Ponuda.create({
@@ -786,7 +783,7 @@ app.post("/nekretnina/:id/ponuda", async (req, res) => {
       cijenaPonude: ponudaCijene,
       datumPonude: datumPonude,
       odbijenaPonuda: odbijenaPonuda,
-      vezanaPonudaId: idVezanePonude,
+      vezanaPonuda: idVezanePonude,
     });
   
     
@@ -845,7 +842,6 @@ app.post("/nekretnina/:id/zahtjev", async (req, res) => {
       return res.status(404).json({ message: "Nekretnina sa tim id ne postoji" });
     }
 
-    
     const currentDate = new Date();
     const requestedDate = new Date(trazeniDatum);
 
@@ -855,13 +851,14 @@ app.post("/nekretnina/:id/zahtjev", async (req, res) => {
       });
     }
 
+    //trazeniDatum can be a null value specifically for the spiral funcionality, I did not want to change it's type due to some unexplainable issues
 
     const newZahtjev = await db.Zahtjev.create({
       korisnik_id: loggedInUser.id,
       nekretnina_id: nekretninaId,
       tekst,
       trazeniDatum,
-      odobren: false, // dok ne bude odobren
+      odobren: false,
     });
 
  

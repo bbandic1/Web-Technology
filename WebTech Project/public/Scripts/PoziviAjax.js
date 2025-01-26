@@ -62,10 +62,10 @@ const PoziviAjax = (() => {
         fnCallback(null, { poruka: 'Podaci su uspješno ažurirani' });
     }
 
-    function impl_postUpit(nekretnina_id, tekst_upita, fnCallback) {
+    function impl_postUpit(id, tekst, fnCallback) {
         const data = {
-            nekretnina_id,
-            tekst_upita,
+            id,
+            tekst,
           };
 
           const xhr = new XMLHttpRequest();
@@ -238,13 +238,13 @@ const PoziviAjax = (() => {
             });
         }
 
-        function impl_postPonuda(nekretninaId, tekst, ponudaCijene, datumPonude, idVezanePonude, odbijenaPonuda, fnCallback) {
+        function impl_postPonuda(nekretninaId, tekst, ponudaCijene, datumPonude, vezanaPonuda, odbijenaPonuda, fnCallback) {
             const url = `http://localhost:3000/nekretnina/${nekretninaId}/ponuda`;
             const data = {
                 tekst: tekst,
                 ponudaCijene: ponudaCijene,
                 datumPonude: datumPonude,
-                idVezanePonude: idVezanePonude,
+                vezanaPonuda: vezanaPonuda,
                 odbijenaPonuda: odbijenaPonuda
             };
             ajaxRequest('POST', url, data, (error, response) => {
@@ -284,7 +284,7 @@ const PoziviAjax = (() => {
             console.log("FINO FINO", trazeniDatum);
             const data = {
                 tekst: tekst,
-                trazeniDatum: trazeniDatum // Osiguraj da je datum u formatu YYYY-MM-DD
+                trazeniDatum: trazeniDatum 
             };
             ajaxRequest('POST', url, data, (error, response) => {
                 if (error) {
