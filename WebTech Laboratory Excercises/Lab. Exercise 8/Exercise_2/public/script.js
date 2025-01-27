@@ -20,7 +20,7 @@ function getAccessToken(proslijedi) {
     ajax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     ajax.setRequestHeader(
         "Authorization",
-        "Basic " + btoa("LnTQG8qUUcAPsKnYMe:YZp9TTtJRvcqfjpWXdnBDabsujNgJbQj")
+        "Basic " + btoa("***:***")
     );
     ajax.send("grant_type=" + encodeURIComponent("client_credentials"));
 }
