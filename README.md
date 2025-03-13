@@ -2,9 +2,9 @@
 
 This project is a web application for real estate management, developed using JavaScript, Node.js, Express, and PHPMyAdmin with XAMPP. The platform allows users to register and log in, providing them access to various features related to real estate listings and inquiries.
 
-## Features
+![Real Estate Image](/WebTech%20Project/public/Resources/Ostalo/Homepage%20photo.png)
 
-![Real Estate Image](../Web-Technology/WebTech%20Project/public/Resources/Ostalo/Homepage%20photo.png)
+## Features
 
 ### Property Browsing
 Users can browse properties categorized into three main types:
